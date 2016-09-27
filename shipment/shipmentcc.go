@@ -23,7 +23,7 @@ func (t *ShipmentChaincode) Init(stub *shim.ChaincodeStub, function string, args
   return nil, nil
 }
 
-func (t *ShipmentChaincode) update(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error)
+func (t *ShipmentChaincode) assign(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error){
   id := args[0]
   status := args[1]
   ok, err = stub.InsertRow("Shipment", shim.Row{
@@ -34,6 +34,30 @@ func (t *ShipmentChaincode) update(stub *shim.ChaincodeStub, function string, ar
 
 	if !ok && err == nil {
 		return nil, errors.New("Asset was already assigned.")
+	}
+}
+
+func (t *ShipmentChaincode) update(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error){
+  id := args[0]
+  status := args[1]
+  err = stub.DeleteRow(
+		"Shipment",
+		[]shim.Column{shim.Column{Value: &shim.Column_String_{String_: id}}},
+	)
+	if err != nil {
+		return nil, errors.New("Failed deliting row.")
+	}
+
+	_, err = stub.InsertRow(
+		"Shipment",
+		shim.Row{
+			Columns: []*shim.Column{
+				&shim.Column{Value: &shim.Column_String_{String_: id}},
+				&shim.Column{Value: &shim.Column_String{String: status}},
+			},
+		})
+	if err != nil {
+		return nil, errors.New("Failed inserting row.")
 	}
 }
 
