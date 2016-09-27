@@ -97,7 +97,7 @@ func (t *ShipmentChaincode) Query(stub *shim.ChaincodeStub, function string, arg
 	}
 
 
-	return row.Columns[1].GetBytes(), nil
+	return []byte(row.Columns[1].GetString_()), nil
 }
 
 
