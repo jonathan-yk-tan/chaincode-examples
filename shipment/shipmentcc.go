@@ -97,7 +97,10 @@ func (t *ShipmentChaincode) Query(stub *shim.ChaincodeStub, function string, arg
 	if err != nil {
 	   return nil, fmt.Errorf("Failed retriving asset [%s]: [%s]", string(id), err)
 	}
-
+  //check no records found
+  if len(row.Columns) == 0 {
+    return nil, nil // no rows with id found
+  }
 
 	return []byte(row.Columns[1].GetString_()), nil
 }
