@@ -4,7 +4,7 @@ import (
   "errors"
   "fmt"
 //  "strconv"
-  "github.com/hyperledger/fabric/core/crypto/primitives"
+  //"github.com/hyperledger/fabric/core/crypto/primitives"
   "github.com/hyperledger/fabric/core/chaincode/shim"
 )
 type ShipmentChaincode struct{
@@ -72,6 +72,8 @@ func (t *ShipmentChaincode) update(stub *shim.ChaincodeStub, args []string) ([]b
 func (t *ShipmentChaincode) Invoke(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
   if function == "update" {
     return t.update(stub,args)
+  }else if function == "assign" {
+    return t.assign(stub,args)
   }
   return nil, errors.New("Received unknown function invocation")
 
@@ -102,7 +104,7 @@ func (t *ShipmentChaincode) Query(stub *shim.ChaincodeStub, function string, arg
 
 
 func main() {
-  primitives.SetSecurityLevel("SHA3", 256)
+  //primitives.SetSecurityLevel("SHA3", 256)
 	err := shim.Start(new(ShipmentChaincode))
 	if err != nil {
 		fmt.Printf("Error starting Shipment chaincode: %s", err)
